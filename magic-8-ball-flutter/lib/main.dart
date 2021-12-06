@@ -5,37 +5,39 @@ void main() => runApp(
       MaterialApp(
         home: BallPage(),
       ),
-);
-    
-class BallPage extends StatefulWidget {
-  @override
-  _BallPageState createState() => _BallPageState();
-}
+    );
 
-class _BallPageState extends State<BallPage> {
-  int ballNumber = 1;
+class BallPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.blue[900],
-        appBar: AppBar(
-          title: Text('Ask Me Anything'),
-          backgroundColor: Colors.blue[900],
-        ),
-        body: Container(
-          color: Colors.blue[300],
-          child: Center(
-            child: Expanded(
-              child: TextButton(
-                onPressed: () {
-                  setState(() {
-                    ballNumber = Random().nextInt(5) + 1;
-                  });
-                },
-                child: Image.asset("images/ball$ballNumber.png"),
-              ),
-          )),
-        ),
+      backgroundColor: Colors.blue,
+      appBar: AppBar(
+        backgroundColor: Colors.blue.shade900,
+        title: Text('Ask Me Anything'),
+      ),
+      body: Ball(),
     );
+  }
+}
+
+class Ball extends StatefulWidget {
+  @override
+  _BallState createState() => _BallState();
+}
+
+class _BallState extends State<Ball> {
+  int ballNumber = 1;
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: TextButton(
+          onPressed: () {
+            setState(() {
+              ballNumber = Random().nextInt(5) + 1;
+            });
+          },
+          child: Image.asset("images/ball$ballNumber.png"),
+        ));
   }
 }
