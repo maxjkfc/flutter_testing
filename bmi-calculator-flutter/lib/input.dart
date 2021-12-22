@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'icon_content.dart';
+import 'reuseable_card.dart';
+import 'constants.dart';
+
+
+enum Gender { male, female }
 
 class InputPage extends StatefulWidget {
   @override
@@ -6,6 +13,11 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
+  Gender selectGender;
+  double bodyHeight = 180.0;
+  double weight = 60.0;
+  int age =  19;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,56 +31,181 @@ class _InputPageState extends State<InputPage> {
             child: Row(
               children: [
                 Expanded(
-                  child: ReuseabledCard(),
-                  ),
+                    child: ReuseabledCard(
+                  color: selectGender == Gender.male
+                      ? activedCardColor
+                      : inactivedCardColor,
+                  childWeight:
+                      IconContent(icon: FontAwesomeIcons.male, text: "MALE"),
+                  onTap: () {
+                    setState(() {
+                      selectGender = Gender.male;
+                    });
+                  },
+                )),
                 Expanded(
-                  child:ReuseabledCard(), 
+                  child: ReuseabledCard(
+                    color: selectGender == Gender.female
+                        ? activedCardColor
+                        : inactivedCardColor,
+                    childWeight: IconContent(
+                        icon: FontAwesomeIcons.female, text: "FEMALE"),
+                    onTap: (){
+                      setState(() {
+                        selectGender = Gender.female;
+                      });
+                    },
+                  ),
                 ),
               ],
             ),
           ),
           Expanded(
-            child: ReuseabledCard(),
+            child: ReuseabledCard(
+                color: activedCardColor ,  
+                childWeight: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('HEIGHT' , style: klabelTextStyle), 
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment:CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(bodyHeight.toString(), style: kNumberTextStyle),
+                        Text(' cm' , style: klabelTextStyle),
+                      ],
+                    ),
+                    SliderTheme(
+                        data: SliderTheme.of(context).copyWith(
+                          inactiveTickMarkColor: Color(0xFF8D8E98),
+                          activeTrackColor: Colors.white,
+                          thumbColor: Color(0xFFEB1555),
+                          overlayColor: Color(0x29EB1555),
+                          thumbShape:  RoundSliderThumbShape(enabledThumbRadius: 10.0),
+                          overlayShape: RoundSliderOverlayShape(overlayRadius: 30.0),
+                        ),
+                      child: Slider(
+                          min: 120.0 , 
+                          max: 220.0 , 
+                          value: bodyHeight , 
+                          onChanged: (double height){
+                            setState((){
+                              bodyHeight = height.roundToDouble();
+                            });
+                          },
+                          ),
+                    ),
+                  ],
+                ),
             ),
+          ),
           Expanded(
             child: Row(
               children: [
                 Expanded(
-                  child: ReuseabledCard(),
-                  ),
-                Expanded(
-                    child: ReuseabledCard(),
+                  child: ReuseabledCard(
+                      color: activedCardColor,
+                      childWeight: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('WEIGHT' , style: klabelTextStyle,),
+                            Text(weight.toString(), style: kNumberTextStyle),
+                            Row(
+                                mainAxisAlignment:  MainAxisAlignment.center,
+                                children: [
+                                  RoundIconButton(
+                                      icon: Icon(FontAwesomeIcons.minus , color:  Color(0xFF8D8E98)),
+                                      onPressed: (){
+                                        setState(() {
+                                          weight--;
+                                        });
+                                      }
+                                  ),
+                                  SizedBox(width:10.0),
+                                  RoundIconButton(
+                                      icon: Icon(FontAwesomeIcons.plus , color:  Color(0xFF8D8E98)),
+                                      onPressed: (){
+                                        setState(() {
+                                          weight++;
+                                        });
+                                      }
+                                  ),
+                                ],
+                            ),
+                          ],
+                      ),
+                      ),
                 ),
+                Expanded(
+                  child: ReuseabledCard(
+                      color: activedCardColor,
+                      childWeight:  Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('AGE' , style: klabelTextStyle,),
+                            Text(age.toString(), style: kNumberTextStyle),
+                            Row(
+                                mainAxisAlignment:  MainAxisAlignment.center,
+                                children: [
+                                  RoundIconButton(
+                                      icon: Icon(FontAwesomeIcons.minus , color:  Color(0xFF8D8E98)),
+                                      onPressed: (){
+                                        setState(() {
+                                          age--;
+                                        });
+                                      }
+                                  ),
+                                  SizedBox(width:10.0),
+                                  RoundIconButton(
+                                      icon: Icon(FontAwesomeIcons.plus , color:  Color(0xFF8D8E98)),
+                                      onPressed: (){
+                                        setState(() {
+                                          age++;
+                                        });
+                                      }
+                                  ),
+                                ],
+                            ),
+                          ],
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
+          Container(
+            color: bContainerColor,
+            margin: EdgeInsets.only(top: 10.0),
+            width: double.infinity,
+            height: bContainerHeight,
+          ),
         ],
-      ),
-      floatingActionButton: Theme(
-        data: ThemeData(
-          colorScheme: ColorScheme.dark(primary: Colors.purple),
-        ),
-        child: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {},
-        ),
       ),
     );
   }
 }
 
 
-class ReuseabledCard extends StatelessWidget{
-  @override
-  Widget build(BuildContext context){
-    return Container(
-                    // child: Text('1'),
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF1D1E33),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  );
-  }
 
+class RoundIconButton extends StatelessWidget{
+
+  RoundIconButton({this.icon , this.onPressed});
+  final Icon icon ;
+  final Function onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+        child: icon,
+        elevation: 0,
+        constraints: BoxConstraints.tightFor(
+          width: 40.0,
+          height: 40.0,
+        ),
+        shape:  CircleBorder(),
+        fillColor:  Color(0xFF4C4F5E),
+        onPressed: onPressed,
+        );
+  }
 }
